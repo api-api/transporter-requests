@@ -1,0 +1,43 @@
+{
+  "name": "api-api/transporter-requests",
+  "description": "Transporter implementation for the Requests library.",
+  "version": "1.0.0",
+  "license": "GPL-3.0",
+  "keywords": [
+    "api-api",
+    "transporter",
+    "transporter-requests"
+  ],
+  "homepage": "http://awesome.ug",
+  "authors": [
+    {
+      "name": "Felix Arntz",
+      "email": "felix-arntz@leaves-and-love.net",
+      "homepage": "https://leaves-and-love.net",
+      "role": "Lead Developer"
+    },
+    {
+      "name": "Sven Wagener",
+      "email": "sven@awesome.ug",
+      "homepage": "http://awesome.ug",
+      "role": "Head of Development"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/api-api/transporter-requests/issues"
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "autoload": {
+    "psr-4": {
+      "APIAPI\\Transporter_Requests\\": "src/Transporter_Requests/"
+    },
+    "files": [
+      "src/transporter-requests.php"
+    ]
+  },
+  "require": {
+    "api-api/core": "*"
+  }
+}
