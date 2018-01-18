@@ -2,14 +2,16 @@
 /**
  * Transporter_Requests class
  *
- * @package APIAPITransporterRequests
+ * @package APIAPI\Transporter_Requests
  * @since 1.0.0
  */
 
 namespace APIAPI\Transporter_Requests;
 
 use APIAPI\Core\Transporters\Transporter;
-use APIAPI\Core\Exception;
+use APIAPI\Core\Request\Request;
+use APIAPI\Core\Request\Method;
+use APIAPI\Core\Exception\Request_Transport_Exception;
 
 if ( ! class_exists( 'APIAPI\Transporter_Requests\Transporter_Requests' ) ) {
 
@@ -23,14 +25,15 @@ if ( ! class_exists( 'APIAPI\Transporter_Requests\Transporter_Requests' ) ) {
 		 * Sends a request and returns the response.
 		 *
 		 * @since 1.0.0
-		 * @access public
 		 *
-		 * @param APIAPI\Core\Request\Request $request The request to send.
+		 * @param Request $request The request to send.
 		 * @return array The returned response as an array with 'headers', 'body',
 		 *               and 'response' key. The array does not necessarily
 		 *               need to include all of these keys.
+		 *
+		 * @throws Request_Transport_Exception Thrown when the request cannot be sent.
 		 */
-		public function send_request( $request ) {
+		public function send_request( Request $request ) {
 			$url     = $request->get_uri();
 			$headers = $request->get_headers();
 			$data    = $request->get_params();
@@ -38,7 +41,7 @@ if ( ! class_exists( 'APIAPI\Transporter_Requests\Transporter_Requests' ) ) {
 			$options = array();
 
 			if ( ! empty( $data ) ) {
-				if ( 'GET' === $type ) {
+				if ( Method::GET === $type ) {
 					$options['data_format'] = 'query';
 				} else {
 					$options['data_format'] = 'body';
@@ -46,7 +49,7 @@ if ( ! class_exists( 'APIAPI\Transporter_Requests\Transporter_Requests' ) ) {
 					if ( 0 === strpos( $request->get_header( 'content-type' ), 'application/json' ) ) {
 						$data = json_encode( $data );
 						if ( ! $data ) {
-							throw new Exception( sprintf( 'The request to %s could not be sent as the data could not be JSON-encoded.', $url ) );
+							throw new Request_Transport_Exception( sprintf( 'The request to %s could not be sent as the data could not be JSON-encoded.', $url ) );
 						}
 					}
 				}
@@ -55,7 +58,7 @@ if ( ! class_exists( 'APIAPI\Transporter_Requests\Transporter_Requests' ) ) {
 			try {
 				$requests_response = \Requests::request( $url, $headers, $data, $type, $options );
 			} catch ( \Requests_Exception $e ) {
-				throw new Exception( sprintf( 'The request to %1$s could not be sent: %2$s', $url, $e->getMessage() ) );
+				throw new Request_Transport_Exception( sprintf( 'The request to %1$s could not be sent: %2$s', $url, $e->getMessage() ) );
 			}
 
 			$response_data = array(
